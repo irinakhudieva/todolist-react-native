@@ -1,6 +1,17 @@
-{
+{ 
   "extends": "expo/tsconfig.base",
   "compilerOptions": {
-    "strict": true
-  }
+    "esModuleInterop": true,
+    "module": "es6",
+    "target": "es6",
+    "lib": ["es6"],
+    "types": ["reflect-metadata", "jest"],
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "baseUrl": "." /* Base directory to resolve non-absolute module names. */,
+    "paths": {
+      "@/*": ["./src/*"],
+    },
+    "strictPropertyInitialization": false,
+  },
 }
