@@ -1,18 +1,18 @@
 import { StateSchema } from "@/shared/store";
-import { getTodos } from "../getTodos";
+import { getOfflineItems } from "../getOfflineItems";
 
 
-describe('getTodos.test', () => {
+describe('getOfflineItems.test', () => {
     test('should return array', () => {
         const state: DeepPartial<StateSchema> = {
-            todo: {
-                todos: [
+            offline: {
+                offlineItems: [
                     {id: '1', todo: 'todo1',completed: false, isSended: true},
                     {id: '2', todo: 'todo2',completed: false, isSended: true},
                 ]
             }
         }
-        expect(getTodos(state as StateSchema)).toEqual([
+        expect(getOfflineItems(state as StateSchema)).toEqual([
             {id: '1', todo: 'todo1',completed: false, isSended: true},
             {id: '2', todo: 'todo2',completed: false, isSended: true},
         ]);
@@ -20,6 +20,6 @@ describe('getTodos.test', () => {
 
     test('should work with empty state', () => {
         const state: DeepPartial<StateSchema> = {}
-        expect(getTodos(state as StateSchema)).toEqual([]);
+        expect(getOfflineItems(state as StateSchema)).toEqual([]);
     });
 });

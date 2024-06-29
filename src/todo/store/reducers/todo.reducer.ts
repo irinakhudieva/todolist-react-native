@@ -25,7 +25,7 @@ const initialState: TodosState = {
     todos: [],
     filter: 'all',
     isLoading: false,
-    error: undefined 
+    error: undefined,
 }
 
 

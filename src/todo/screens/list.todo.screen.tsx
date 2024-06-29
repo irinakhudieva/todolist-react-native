@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Alert, FlatList, RefreshControl, View } from "react-native";
 import { useAppDispatch } from "@/shared/store/hooks/redux";
 import { fetchAllTodos } from "../store/reducers/todo.reducer";
@@ -7,20 +7,35 @@ import Loader from "@/shared/ui/loader/loader";
 import useTodoList from "../hooks/todo.list.hook";
 import FilterTodo from "./filter.todo.screen";
 import useFilterTodo from "../hooks/filter.todo.hook";
+import { useSelector } from "react-redux";
+import { getIsOfflineLoader } from "@/offline/store/selectors/getIsOfflineLoader";
+import { loadUnsavedItems } from "@/offline/store/reducers/offline.reducer";
+import { getOfflineItems } from "@/offline/store/selectors/getOfflineItems";
 
 
 export default function TodoList() {
     const dispatch = useAppDispatch();
     const { isLoading, error } = useTodoList();
     const { filteredTodos, handleFilterChange } = useFilterTodo();
-
-    console.log(filteredTodos)
+    const isOfflineLoading = useSelector(getIsOfflineLoader);
+    const offlineItems  = useSelector(getOfflineItems)
 
     useEffect(() => {
-        dispatch(fetchAllTodos());
+        if(offlineItems.length) {
+            dispatch(loadUnsavedItems());
+        }
+        else {
+            dispatch(fetchAllTodos());
+        }
     }, [dispatch]);
 
-    if(isLoading) return <Loader /> 
+    useEffect(() => {
+        if (!isOfflineLoading) {
+            dispatch(fetchAllTodos());
+        }
+    }, [dispatch, isOfflineLoading]);
+
+    if (isOfflineLoading || isLoading) return <Loader />;
 
     if(error) {
         Alert.alert('Ошибка', 'Не удалость получить список todo')

@@ -8,13 +8,13 @@ import { ITodo } from "@/todo/store/reducers/todo.reducer";
 export interface OfflineState {
     isOnline: boolean;
     offlineItems: ITodo[];
-    isLoading: boolean;
+    isOfflineLoading: boolean;
 }
 
 export const offlineInitialState: OfflineState = {
     isOnline: false,
     offlineItems: [],
-    isLoading: false
+    isOfflineLoading: true
 }
 
 export const offlineSlice = createSlice({
@@ -28,6 +28,17 @@ export const offlineSlice = createSlice({
             state.offlineItems = action.payload;
         }
     },
+    extraReducers: (builder) => {
+        builder
+            .addCase(loadUnsavedItems.fulfilled, (state) => {
+                state.isOfflineLoading = false;
+            })
+            .addCase(loadUnsavedItems.rejected, (state) => {
+                state.isOfflineLoading = false;
+            })
+    },
+   
+    
 });
 
 export const loadUnsavedItems = createAsyncThunk<void, void, ThunkConfig<string>>(
@@ -37,8 +48,9 @@ export const loadUnsavedItems = createAsyncThunk<void, void, ThunkConfig<string>
     const items = await unsavedItemsManager.getFromOffline<ITodo[]>(
       OFFLINE_ENTITY_TYPES.TODOS
     )
-
-    dispatch(setOfflineItems(items ?? []));
+    
+    dispatch(setOfflineItems(items)); 
+    
   },
 );
 
